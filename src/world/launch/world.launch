@@ -1,0 +1,7 @@
+<!-- -*- xml -*- -->
+<launch>
+    <param name="motor_noise" value="0.25" type="double" />
+    <param name="laser_noise" value="0.15" type="double" />
+    <node name="stage" pkg="stage_ros" type="stageros" required="true" ns="stage" args="$(find world)/share/world1.world" />
+    <node name="car_1" pkg="world" type="car.py" required="true" output="screen" args="car_1 0" />
+</launch>

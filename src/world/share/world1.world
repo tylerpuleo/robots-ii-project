@@ -1,0 +1,17 @@
+include "common.inc"
+
+floorplan ( 
+  bitmap "world1.png"
+  name "world1"
+  size [50 50 1]
+)
+
+robot (
+  name "robot"
+  pose [2 0 0 0]
+)
+
+pedestrian (
+  name "ped"
+  pose [0 0 0 0]
+)
