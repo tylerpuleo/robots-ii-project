@@ -27,17 +27,32 @@ class CarNode:
     rp.spin()
 
   def laserCallback(self, msg):
-    for idx, val in enumerate(msg.ranges):
-      1
+    tmp = list(msg.ranges)
+
+    for ii in range(len(tmp)):
+        if tmp[ii] < 5.0:
+            tmp[ii] = random.gauss(tmp[ii], 0.5)
+
+    msg.ranges = tmp
+    return msg
 
   def motorCallback(self, msg):
-    1
+    msg.linear.x = random.gauss(msg.linear.x, msg.linear.x / 3.0)
+    msg.linear.y = 0
+    msg.linear.z = 0
+
+    msg.angular.x = 0
+    msg.angular.y = 0
+    msg.angular.z = 0
+
+    return msg
 
 if __name__ == '__main__':
+  
   if len(sys.argv) < 3:
-    1
-    #raise RuntimeException('Need to provide an ID and name for CarNode')
+    raise RuntimeException('Need to provide an ID and name for CarNode')
   else:
+
     name = sys.argv[1]
     model = int(sys.argv[2])
 
