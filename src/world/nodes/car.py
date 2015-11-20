@@ -10,7 +10,6 @@ import sys
 
 import random
 
-
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 
@@ -62,4 +61,3 @@ if __name__ == '__main__':
     car = CarNode(name, model)
   except rp.ROSInterruptException:
     pass
-
