@@ -8,6 +8,9 @@ import numpy as np
 
 import sys
 
+import random
+
+
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 
@@ -32,7 +35,8 @@ class CarNode:
 
 if __name__ == '__main__':
   if len(sys.argv) < 3:
-    raise RuntimeException('Need to provide an ID and name for CarNode')
+    1
+    #raise RuntimeException('Need to provide an ID and name for CarNode')
   else:
     name = sys.argv[1]
     model = int(sys.argv[2])
@@ -43,3 +47,4 @@ if __name__ == '__main__':
     car = CarNode(name, model)
   except rp.ROSInterruptException:
     pass
+
