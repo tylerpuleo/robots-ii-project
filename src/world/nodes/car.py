@@ -9,6 +9,7 @@ import numpy as np
 import sys
 
 import random
+import math
 
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
@@ -33,18 +34,25 @@ class CarNode:
             tmp[ii] = random.gauss(tmp[ii], 0.5)
 
     msg.ranges = tmp
-    return msg
+    
+    self.pbLaser.publish(msg)
 
   def motorCallback(self, msg):
-    msg.linear.x = random.gauss(msg.linear.x, msg.linear.x / 3.0)
+    sp = msg.linear.x
+    sp = sp if sp < 4.0 else 4.0
+
+    tu = msg.angular.z
+    tu = tu if tu < 6.28 else 6.28
+
+    msg.linear.x = random.gauss(sp, math.sqrt(tu*tu + sp*sp) / 6.0)
     msg.linear.y = 0
     msg.linear.z = 0
 
     msg.angular.x = 0
     msg.angular.y = 0
-    msg.angular.z = 0
+    msg.angular.z = random.gauss(tu, math.sqrt(tu*tu + sp*sp) / 6.0)
 
-    return msg
+    self.pbMotor.publish(msg)
 
 if __name__ == '__main__':
   
