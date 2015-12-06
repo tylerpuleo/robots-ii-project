@@ -8,11 +8,11 @@ from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Vector3
 from sensor_msgs.msg import LaserScan
 import turtlesim.msg
-
+"""
 def handle_pose(msg):
     br = tf.TransformBroadcaster()
     br.sendTransform((msg.x, msg.y, 0),tf.transformations.quaternion_from_euler(0, 0, msg.theta),rp.Time.now(),"car_1","world")
-
+"""
 def laser_cb(msg):
 
     if msg.ranges[90] < 2:
@@ -30,7 +30,7 @@ def laser_cb(msg):
 def main():
     rp.init_node('robot_0', anonymous=True)
     rp.Subscriber('/robot_0/base_scan', LaserScan, laser_cb)
-    rp.Subscriber('/robot_0/base_pose_ground_truth',turtlesim.msg.Pose,handle_pose)
+    #rp.Subscriber('/robot_0/base_pose_ground_truth',turtlesim.msg.Pose,handle_pose)
 
     global cmd_vel_pub
     cmd_vel_pub = rp.Publisher('/car_1/velocity', Twist, queue_size=1)
