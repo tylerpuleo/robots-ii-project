@@ -8,6 +8,9 @@ import numpy as np
 
 import sys
 
+import random
+import math
+
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 
@@ -24,16 +27,39 @@ class CarNode:
     rp.spin()
 
   def laserCallback(self, msg):
-    for idx, val in enumerate(msg.ranges):
-      1
+    tmp = list(msg.ranges)
+
+    for ii in range(len(tmp)):
+        if tmp[ii] < 5.0:
+            tmp[ii] = random.gauss(tmp[ii], 0.5)
+
+    msg.ranges = tmp
+    
+    self.pbLaser.publish(msg)
 
   def motorCallback(self, msg):
-    1
+    sp = msg.linear.x
+    sp = sp if sp < 4.0 else 4.0
+
+    tu = msg.angular.z
+    tu = tu if tu < 6.28 else 6.28
+
+    msg.linear.x = random.gauss(sp, math.sqrt(tu*tu + sp*sp) / 6.0)
+    msg.linear.y = 0
+    msg.linear.z = 0
+
+    msg.angular.x = 0
+    msg.angular.y = 0
+    msg.angular.z = random.gauss(tu, math.sqrt(tu*tu + sp*sp) / 6.0)
+
+    self.pbMotor.publish(msg)
 
 if __name__ == '__main__':
+  
   if len(sys.argv) < 3:
     raise RuntimeException('Need to provide an ID and name for CarNode')
   else:
+
     name = sys.argv[1]
     model = int(sys.argv[2])
 
