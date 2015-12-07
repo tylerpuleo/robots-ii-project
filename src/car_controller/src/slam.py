@@ -3,7 +3,6 @@
 from __future__ import division
 
 import cv2
-import lineit
 import numpy as np
 
 import fov
