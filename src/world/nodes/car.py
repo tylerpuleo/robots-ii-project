@@ -30,8 +30,8 @@ class CarNode:
     tmp = list(msg.ranges)
 
     for ii in range(len(tmp)):
-        if tmp[ii] < 5.0:
-            tmp[ii] = random.gauss(tmp[ii], 0.5)
+      if tmp[ii] < 5.0:
+        tmp[ii] = random.gauss(tmp[ii], self.laserNoise)
 
     msg.ranges = tmp
     
