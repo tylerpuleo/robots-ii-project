@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #from ..world.nodes import car
 from __future__ import division
+import cv2
 import numpy as np
 import roslib; roslib.load_manifest('car_controller')
 import rospy as rp
@@ -13,6 +14,7 @@ from nav_msgs.msg import OccupancyGrid
 import slam
 
 oldOdom = None
+oldScan = None
 pose = (0, 0, 0)
 gmap = np.ones((1100, 1100), np.float32) * 0.5
 
@@ -28,12 +30,15 @@ def drive(msg):
   return control
 
 def laser_cb(msg):
-  global oldOdom, pose, gmap
+  global oldOdom, oldScan, pose, gmap
   control = drive(msg)
   if oldOdom != None:
-    slam.gridMapping(gmap, pose, msg.ranges)
-    slam.scanMatch(msg.ranges, oldOdom)
+    newPose = slam.scanMatch(gmap, pose, msg.ranges, oldScan, oldOdom)
+    slam.gridMapping(gmap, newPose, msg.ranges)
+    pose = (newPose[0], newPose[1], newPose[2])
+    # slam.gridMapping(gmap, pose, msg.ranges)
   oldOdom = control
+  oldScan = msg.ranges
 
 # only used for debugging purposes
 # gets the current pose and uses it in mapping
@@ -52,12 +57,13 @@ def pose_cb(msg):
   x = msg.pose.pose.position.x
   y = msg.pose.pose.position.y
   t = euler[2]
+
   pose = (x, y, t)
 
 def main():
   rp.init_node('aaa', anonymous=True)
   rp.Subscriber('/car_1/scan', LaserScan, laser_cb)
-  rp.Subscriber('/robot_0/base_pose_ground_truth', Odometry, pose_cb)
+  # rp.Subscriber('/robot_0/base_pose_ground_truth', Odometry, pose_cb)
 
   global cmd_vel_pub
   cmd_vel_pub = rp.Publisher('/car_1/velocity', Twist, queue_size=1)
